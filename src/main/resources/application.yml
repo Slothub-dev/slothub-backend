@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: slothub-backend
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/slothub}
+    username: ${DB_USERNAME:slothub}
+    password: ${DB_PASSWORD:slothub}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+
+server:
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
