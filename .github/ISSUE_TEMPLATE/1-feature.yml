@@ -1,0 +1,37 @@
+name: Фича
+description: Новая функциональность в формате user story
+labels: ["type:feature"]
+body:
+  - type: textarea
+    id: story
+    attributes:
+      label: User story
+      description: Кто, что и зачем.
+      placeholder: Как <роль>, я хочу <действие>, чтобы <ценность>.
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Контекст
+      description: Откуда пришла задача, какую проблему решаем, ссылки на связанные задачи.
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Критерии приёмки
+      description: Проверяемые сценарии. Задача считается выполненной, только когда выполнены все.
+      value: |
+        - [ ] **Дано** ..., **когда** ..., **тогда** ...
+        - [ ] **Дано** ..., **когда** ..., **тогда** ...
+    validations:
+      required: true
+  - type: textarea
+    id: tech-notes
+    attributes:
+      label: Технические заметки
+      description: Подсказки по реализации, затрагиваемые модули, API, ограничения.
+  - type: textarea
+    id: out-of-scope
+    attributes:
+      label: Не входит в задачу
+      description: Что сознательно не делаем в рамках этой задачи.

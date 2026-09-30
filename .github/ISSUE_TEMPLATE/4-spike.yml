@@ -1,0 +1,35 @@
+name: Исследование (spike)
+description: Задача на изучение вопроса с ограничением по времени. Результат — знание, а не продакшн-код.
+labels: ["type:spike"]
+body:
+  - type: textarea
+    id: question
+    attributes:
+      label: Вопрос
+      description: На какой вопрос нужно ответить?
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Контекст
+      description: Зачем нам это знать, какое решение зависит от ответа.
+    validations:
+      required: true
+  - type: input
+    id: timebox
+    attributes:
+      label: Таймбокс
+      description: Сколько времени максимум тратим. Не успели — фиксируем, что узнали, и решаем, что дальше.
+      placeholder: 4 часа
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Ожидаемый результат
+      description: В каком виде нужен ответ.
+      value: |
+        - [ ] Сравнение вариантов с плюсами и минусами
+        - [ ] Рекомендация
+        - [ ] ADR в `docs/adr` (если решение архитектурное)

@@ -1,0 +1,30 @@
+name: Техдолг
+description: Улучшение кода, инфраструктуры или процесса без изменения бизнес-логики
+labels: ["type:tech-debt"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Проблема
+      description: Что не так сейчас и где это в коде.
+    validations:
+      required: true
+  - type: textarea
+    id: impact
+    attributes:
+      label: Почему это важно
+      description: Риски, если не делать. Что станет проще, если сделать.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Предлагаемое решение
+  - type: textarea
+    id: done
+    attributes:
+      label: Критерии готовности
+      value: |
+        - [ ]
+    validations:
+      required: true
