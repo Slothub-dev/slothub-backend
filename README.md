@@ -43,6 +43,58 @@ Liquibase applies all migrations on startup.
 
 Database connection can be overridden with `DB_URL`, `DB_USERNAME`, `DB_PASSWORD` environment variables.
 
+### Local environment
+
+#### Stop and reset
+
+```bash
+# Stop the containers, keep the data
+docker compose stop
+
+# Stop and remove the containers together with the database volume.
+# WARNING: this deletes all local data.
+docker compose down -v
+```
+
+#### Port conflicts
+
+If port `5432` or `8080` is already taken on your machine, override the ports with environment variables
+instead of editing files in the repository. Create a `.env` file in the project root
+(it is listed in `.gitignore` and must not be committed):
+
+```properties
+# PostgreSQL port on your machine (used by docker compose)
+POSTGRES_PORT=5433
+# The application must connect to the same port
+DB_URL=jdbc:postgresql://localhost:5433/slothub
+# Application HTTP port
+SERVER_PORT=8081
+```
+
+- Docker Compose reads `.env` automatically.
+- Spring Boot does not read `.env` by itself. In IntelliJ IDEA open **Run → Edit Configurations**, select the
+  application configuration and add the `.env` file in the **Environment variables** field.
+  When running from a terminal, set the variables in the shell (PowerShell: `$env:SERVER_PORT="8081"`).
+- Any Spring property can be overridden this way: `server.port` becomes `SERVER_PORT`,
+  `spring.jpa.show-sql` becomes `SPRING_JPA_SHOW_SQL`, and so on.
+
+#### Running from IntelliJ IDEA
+
+1. Start PostgreSQL: `docker compose up -d`.
+2. Open `src/main/java/com/slothub/SlotHubApplication.java` and click the green Run icon in the gutter next to the class.
+
+Tests:
+
+- **All tests:** right-click `src/test/java` → **Run 'All Tests'**. Integration tests (`*IT`) require Docker to be running.
+- **Through Maven:** in the **Maven** tool window run **Lifecycle → test** (unit tests only)
+  or **Lifecycle → verify** (all tests).
+
+#### Troubleshooting
+
+- **IntelliJ IDEA shows `Unresolved dependency`.** Force Maven to re-download dependencies with
+  `./mvnw -U clean test-compile` (Windows: `mvnw.cmd -U clean test-compile`),
+  then click **Reload All Maven Projects** in the **Maven** tool window.
+
 ### Tests
 
 ```bash
