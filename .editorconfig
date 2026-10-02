@@ -16,3 +16,7 @@ trim_trailing_whitespace = false
 
 [*.{cmd,bat}]
 end_of_line = crlf
+
+[*.java]
+# IntelliJ IDEA otherwise derives continuation indent from indent_size (4)
+ij_continuation_indent_size = 8
