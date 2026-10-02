@@ -6,6 +6,7 @@ import com.slothub.common.exception.NotFoundException;
 import com.slothub.space.Space;
 import com.slothub.space.SpaceService;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -78,7 +79,8 @@ public class BookingService {
     }
 
     private BigDecimal calculatePrice(Space space, Instant startsAt, Instant endsAt) {
-        long hours = Duration.between(startsAt, endsAt).toHours();
-        return space.getPricePerHour().multiply(BigDecimal.valueOf(hours));
+        long minutes = Duration.between(startsAt, endsAt).toMinutes();
+        return space.getPricePerHour().multiply(BigDecimal.valueOf(minutes)).
+            divide(BigDecimal.valueOf(60), 2, RoundingMode.HALF_UP);
     }
 }
