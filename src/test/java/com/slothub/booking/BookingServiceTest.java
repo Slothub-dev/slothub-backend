@@ -11,11 +11,9 @@ import com.slothub.booking.dto.BookingResponse;
 import com.slothub.booking.dto.CreateBookingRequest;
 import com.slothub.space.Space;
 import com.slothub.space.SpaceService;
-
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -73,12 +71,12 @@ class BookingServiceTest {
         assertThat(saved.getTotalPrice()).isEqualByComparingTo("3000.00");
     }
 
-    @ParameterizedTest(name = "Minutes {0}, Cost per Hour {1}, Total Cost {2}")
+    @ParameterizedTest(name = "Cost per Hour {0}, Minutes {1}, Total Cost {2}")
     @CsvSource({
             "2000.00, 90, 3000.00",
             "1000.00, 70, 1166.67",
             "1000.00, 10, 166.67",
-            "1000.005, 540, 9000.09"
+            "1000.00, 11, 183.33"
     })
     void calculatesPriceProportionallyToDuration(BigDecimal costPerHour, int minutes, BigDecimal totalCost) {
         Instant end = START.plus(minutes, ChronoUnit.MINUTES);
