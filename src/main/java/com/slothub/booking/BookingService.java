@@ -5,6 +5,7 @@ import com.slothub.booking.dto.CreateBookingRequest;
 import com.slothub.common.exception.NotFoundException;
 import com.slothub.space.Space;
 import com.slothub.space.SpaceService;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Duration;
@@ -12,6 +13,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class BookingService {
+    private static final BigDecimal MINUTES_PER_HOUR = BigDecimal.valueOf(60);
+    private static final int MONEY_SCALE = 2;
 
     private final BookingRepository bookingRepository;
     private final BookingMapper bookingMapper;
@@ -80,7 +84,7 @@ public class BookingService {
 
     private BigDecimal calculatePrice(Space space, Instant startsAt, Instant endsAt) {
         long minutes = Duration.between(startsAt, endsAt).toMinutes();
-        return space.getPricePerHour().multiply(BigDecimal.valueOf(minutes)).
-            divide(BigDecimal.valueOf(60), 2, RoundingMode.HALF_UP);
+        return space.getPricePerHour().setScale(MONEY_SCALE, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(minutes))
+                .divide(MINUTES_PER_HOUR, MONEY_SCALE, RoundingMode.HALF_UP);
     }
 }
