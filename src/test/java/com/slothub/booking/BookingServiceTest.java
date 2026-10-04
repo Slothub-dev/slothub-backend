@@ -13,9 +13,12 @@ import com.slothub.space.Space;
 import com.slothub.space.SpaceService;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -66,6 +69,30 @@ class BookingServiceTest {
         Booking saved = captor.getValue();
         assertThat(saved.getStatus()).isEqualTo(BookingStatus.CONFIRMED);
         assertThat(saved.getTotalPrice()).isEqualByComparingTo("3000.00");
+    }
+
+    @ParameterizedTest(name = "Cost per Hour {0}, Minutes {1}, Total Cost {2}")
+    @CsvSource({
+            "2000.00, 90, 3000.00",
+            "1000.00, 70, 1166.67",
+            "1000.00, 10, 166.67",
+            "1000.00, 11, 183.33"
+    })
+    void calculatesPriceProportionallyToDuration(BigDecimal costPerHour, int minutes, BigDecimal totalCost) {
+        Instant end = START.plus(minutes, ChronoUnit.MINUTES);
+        space.setPricePerHour(costPerHour);
+
+        CreateBookingRequest request = new CreateBookingRequest(1L, "Ivan", "ivan@mail.ru", START, end);
+        when(spaceService.findSpace(1L)).thenReturn(space);
+        when(bookingRepository.existsOverlapping(1L, START, end)).thenReturn(false);
+        when(bookingRepository.save(any(Booking.class))).thenAnswer(inv -> inv.getArgument(0));
+
+        bookingService.create(request);
+
+        ArgumentCaptor<Booking> captor = ArgumentCaptor.forClass(Booking.class);
+        verify(bookingRepository).save(captor.capture());
+        Booking saved = captor.getValue();
+        assertThat(saved.getTotalPrice()).isEqualByComparingTo(totalCost);
     }
 
     @Test
